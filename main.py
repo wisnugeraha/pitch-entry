@@ -10,17 +10,16 @@ so the pitch can be retuned against the judge's stated criteria
 import os
 
 # Pitch parts — the persuasive core, kept as data.
-HOOK = "You have told me about this app idea three times now"
-OFFER = "just describe it in plain words to an AI agent on make.fun"
-PAYOFF = "by tonight you will have a real working version you can tap, use, and show people"
+HOOK = "You have told me about this app idea three times now — "
+OFFER = "describe it in plain words to an AI agent on make.fun, and "
+PAYOFF = "by tonight you will have a real working version you can tap, use, and show people — "
 REASSURE = "no coding needed"
 
 
 def make_entry() -> str:
-    """Assemble the one-sentence pitch and enforce the gate limits."""
-    entry = (
-        f"{HOOK} — {OFFER}, and {PAYOFF}, {REASSURE}."
-    )
+    """Assemble the one-sentence pitch, joined into exactly one line."""
+    entry = HOOK + OFFER + PAYOFF + REASSURE + "."
+    assert "\n" not in entry, "pitch must stay a single line"
     return entry
 
 
@@ -28,7 +27,6 @@ def main():
     entry = make_entry()
     # Gate: 1-240 characters, exactly one line, UTF-8.
     assert 1 <= len(entry) <= 240, f"entry length {len(entry)} outside 1-240"
-    assert "\n" not in entry, "entry must be a single line"
     out = "/output/entry.txt"
     os.makedirs(os.path.dirname(out), exist_ok=True)
     with open(out, "w", encoding="utf-8") as f:
@@ -37,7 +35,7 @@ def main():
     with open(out, "r", encoding="utf-8") as f:
         on_disk = f.read()
     assert on_disk == entry, "file on disk differs from intended entry"
-    print(f"Wrote entry to {out} ({len(entry)} chars)")
+    print(f"Wrote entry to {out} ({len(entry)} chars): {on_disk}")
 
 
 if __name__ == "__main__":
